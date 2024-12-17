@@ -1,0 +1,57 @@
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QListWidget, QLabel
+
+class FoodApp(QWidget):
+    def __init__(self):
+       super().__init__()
+       
+       # Установка заголовка и размеров окна
+       self.setWindowTitle('Приложение с едой')
+       self.setGeometry(100, 100, 400, 300)
+       self.setStyleSheet("background-color: lightyellow;")  # Раскраска окна
+
+       # Основной макет
+       layout = QVBoxLayout()
+
+       # Список блюд
+       self.food_list_widget = QListWidget()
+       food_items = ["Пицца", "Бургер", "Суши", "Салат", "Десерт"]
+       for item in food_items:
+           self.food_list_widget.addItem(item)
+
+       layout.addWidget(self.food_list_widget)
+
+       # Метка для отображения информации о выбранном блюде
+self.food_info_label = QLabel("Выберите блюдо из списка.")
+       layout.addWidget(self.food_info_label)
+
+       # Подключаем событие выбора блюда
+       self.food_list_widget.currentItemChanged.connect(self.display_food_info)
+
+       # Установка макета в окно
+       self.setLayout(layout)
+
+    def display_food_info(self):
+       current_item = self.food_list_widget.currentItem().text()
+       
+       if current_item == "Пицца":
+           info_text = "Пицца - это итальянское блюдо из теста с начинкой."
+       elif current_item == "Бургер":
+           info_text = "Бургер - это бутерброд с мясом и овощами."
+       elif current_item == "Суши":
+           info_text = "Суши - это японское блюдо из риса и рыбы."
+       elif current_item == "Салат":
+           info_text = "Салат - это смесь овощей и других ингредиентов."
+       elif current_item == "Десерт":
+           info_text = "Десерт - это сладкое блюдо после основного приема пищи."
+       
+       # Обновляем текст метки информации о еде
+       self.food_info_label.setText(info_text)
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    
+    food_app_window = FoodApp()
+    food_app_window.show()
+
+    sys.exit(app.exec_())
