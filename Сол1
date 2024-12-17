@@ -1,0 +1,80 @@
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox
+from PyQt5.QtGui import QPixmap
+
+class LoginWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle('Авторизация')
+        self.setGeometry(100, 100, 300, 200)
+        self.setStyleSheet("background-color: lightblue;")  # Раскраска окна
+        
+        self.layout = QVBoxLayout()
+        
+        self.label_username = QLabel('Имя пользователя:')
+        self.layout.addWidget(self.label_username)
+        
+        self.input_username = QLineEdit(self)
+        self.layout.addWidget(self.input_username)
+        
+        self.label_password = QLabel('Пароль:')
+        self.layout.addWidget(self.label_password)
+        
+        self.input_password = QLineEdit(self)
+        self.input_password.setEchoMode(QLineEdit.Password)
+        self.layout.addWidget(self.input_password)
+        
+        self.button_login = QPushButton('Войти', self)
+        self.button_login.clicked.connect(self.check_credentials)
+        self.layout.addWidget(self.button_login)
+
+        self.setLayout(self.layout)
+
+    def check_credentials(self):
+        username = self.input_username.text()
+        password = self.input_password.text()
+        
+        if username == "user" and password == "password":
+            QMessageBox.information(self, "Успех", "Вы успешно вошли!")
+            self.profile_window = ProfileWindow(username)
+            self.profile_window.show()
+            self.close()
+        else:
+            QMessageBox.warning(self, "Ошибка", "Неверное имя пользователя или пароль.")
+
+class ProfileWindow(QWidget):
+    def __init__(self, username):
+        super().__init__()
+        self.setWindowTitle('Личный профиль')
+        self.setGeometry(100, 100, 300, 400)
+        self.setStyleSheet("background-color: lightgreen;")  # Раскраска окна
+
+        layout = QVBoxLayout()
+
+        # Заголовок профиля
+        label_welcome = QLabel(f'Добро пожаловать, {username}!')
+        layout.addWidget(label_welcome)
+
+        pixmap = QPixmap('my_image.jpg')  
+        label_photo = QLabel()
+        label_photo.setPixmap(pixmap.scaled(200, 200))  
+        layout.addWidget(label_photo)
+
+        # Кнопка выхода
+        button_logout = QPushButton('Выйти', self)
+        button_logout.clicked.connect(self.logout)
+        layout.addWidget(button_logout)
+
+        self.setLayout(layout)
+
+    def logout(self):
+        QMessageBox.information(self, "Выход", "Вы вышли из системы.")
+        login_window = LoginWindow()
+        login_window.show()
+        self.close()
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    window = LoginWindow()
+    window.show()
+    sys.exit(app.exec_())
